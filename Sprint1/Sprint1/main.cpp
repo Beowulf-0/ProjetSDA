@@ -2,6 +2,7 @@
 #include <time.h>
 #include <cassert>
 
+#define minMines 1
 #define maxMines 32
 
 /**
@@ -32,6 +33,12 @@ struct Grille {
 */
 void createProblem(Probleme& p);
 
+/**
+*	@brief Affiche le problème
+*	@param[in] p, le problème
+*/
+void printProblem(const Probleme& p);
+
 int main() {
 	srand((unsigned int)time(NULL));
 	Probleme p;
@@ -43,6 +50,7 @@ int main() {
 	switch (commande) {
 		case '1':
 			createProblem(p);
+			printProblem(p);
 
 		case '2':
 		//createGrid();
@@ -60,9 +68,20 @@ void createProblem(Probleme& p) {
 	
 	std::cin >> p.nbLignes >> p.nbColonnes >> p.nbMines;
 
-	assert(p.nbLignes > 0 || p.nbColonnes > 0 || p.nbMines > 0);
+	assert((p.nbLignes > 0 || p.nbColonnes > 0 || p.nbMines > 0) && (p.nbLignes < 16 || p.nbColonnes < 16 || p.nbMines < maxMines));
 
-	for (int i = 0; i < p.nbMines; i++) {
-		
+	for (unsigned int i = 0; i < p.nbMines; i++) {
+		p.tabMines[i] = rand() % (maxMines / 2) + minMines;
 	}
+}
+
+void printProblem(const Probleme& p) {
+	std::cout << p.nbLignes << " " << p.nbColonnes << " " << p.nbMines;
+	for (unsigned int i = 0; i < p.nbMines; i++) {
+		std::cout << " " << p.tabMines[i];
+	}
+}
+
+void tests() {
+
 }
