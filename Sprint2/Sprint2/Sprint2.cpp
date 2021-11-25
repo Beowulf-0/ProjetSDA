@@ -1,6 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include <cassert>
+#include <random>
 
 
 
@@ -19,12 +20,8 @@ struct Probleme {
 
 struct Historique {
 	unsigned int nbCoups;
-	char coups[2];
-};
-
-struct Mine{
-	bool estMarquée;
-	char symbole = 'x';
+	unsigned int position;
+	char symbole;
 };
 
 struct Grille {
@@ -45,11 +42,8 @@ void createProblem(Probleme& p);
 */
 void printProblem(const Probleme& p);
 
-/**
-*
-*
-*/
-void printGrid(const Grille& g);
+void genererMines(Probleme& p, unsigned int mines[]);
+
 
 int main() {
 	srand((unsigned int)time(NULL));
@@ -67,7 +61,7 @@ int main() {
 			printProblem(p);
 			break;
 		case 2:
-			printGrid(g);
+			//printGrid(g);
 			break;
 
 		case 5:
@@ -78,21 +72,26 @@ int main() {
 			break;
 		}
 	}
-	
+
 }
 
 void createProblem(Probleme& p) {
-	//unsigned int lignes;
-	//unsigned int colonnes;
-	
-	std::cin >> p.nbLignes >> p.nbColonnes >> p.nbMines;
-	//p.tabMines = new unsigned int[p.nbMines];
-	//assert((p.nbLignes > 0 || p.nbColonnes > 0 || p.nbMines > 0) && (p.nbLignes < 16 || p.nbColonnes < 16 || p.nbMines < 32));
 
+	std::cin >> p.nbLignes >> p.nbColonnes >> p.nbMines;
+	
+	p.tabMines = new unsigned int[p.nbMines];
+
+	genererMines(p, p.tabMines);
+
+	std::cout << p.nbLignes << " " << p.nbColonnes << " " << p.nbMines;
+
+	for (unsigned int i = 0; i < p.nbMines; i++) {
+		std::cout << " " << p.tabMines[i];
+	}
 }
 
 void printProblem(const Probleme& p) {
-	
+
 	std::cout << p.nbLignes << " " << p.nbColonnes << " " << p.nbMines;
 	for (unsigned int i = 0; i < p.nbMines; i++) {
 		//std::cout << " " << p.tabMines[i];
@@ -101,17 +100,21 @@ void printProblem(const Probleme& p) {
 }
 
 void createGrid(Grille& g) {
-	unsigned int lignes, colonnes, nbreMines;
-	Grille gr;
-	gr.probleme.tabMines[g.probleme.nbMines];
-	std::cin >> lignes >> colonnes >> nbreMines;
-	
+	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes >> g.probleme.nbMines;
+	for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
+		std::cin >> g.probleme.tabMines[i];
+	}
+	std::cin >> g.coups.nbCoups;
+
 }
 
-//
-void printGrid(const Grille& g) {
-	
+void genererMines(Probleme& p, unsigned int mines[]) {
+	for (unsigned int m = 0; m < p.nbMines; m++) {
+		unsigned int limitePos = p.nbColonnes * p.nbLignes;
+		mines[m] = std::rand() % limitePos;
+	}
 }
+
 
 void tests() {
 
