@@ -17,13 +17,12 @@ struct Probleme {
 
 struct Historique {
 	unsigned int nbCoups;
-	unsigned int position;
 	Coup *coups;
 };
 
 struct Grille {
 	Probleme probleme;
-	unsigned int tabGrille;
+	unsigned int* tabGrille;
 	Historique histo;
 };
 
@@ -43,6 +42,8 @@ void genererMines(Probleme& p, unsigned int mines[]);
 *	@param[in-out] g, la grille
 */
 void createGrid(Grille& g);
+
+void printGrid(const Grille& g, unsigned int lignes, unsigned int colonnes);
 
 int main() {
 	srand((unsigned int)time(NULL));
@@ -89,48 +90,77 @@ void createProblem(Probleme& p) {
 	std::cout << std::endl;
 }
 
+//pas obligé de faire une seule ligne avec toutes les commandes, fait des boucles.
+//pour extraire les sous chaines, voir strncpy et atoi (convertir)
+
+//historique : boucle for lorsque l'on fournit le nombre de coups.
+
 /**	@brief réalise une grille à partir du nombre de lignes, de colonnes, de mines, des positions des mines et de l'historique de coups
 *	@param[in-out] g, la grille créé
 *
 */
 void createGrid(Grille& g) {
-	unsigned int *tMines = g.probleme.tabMines;
-	unsigned int limitePos = g.probleme.nbLignes * g.probleme.nbColonnes;
+//	unsigned int *tMines = g.probleme.tabMines;
+//	unsigned int limitePos = g.probleme.nbLignes * g.probleme.nbColonnes;
+//
+//	unsigned int lignes = g.probleme.nbLignes;
+//	unsigned int colonnes = g.probleme.nbColonnes;
+//
+//	//char mot[4];
+//
+////	Grille **gr = new Grille*[lignes];
+//
+//	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes >> g.probleme.nbMines;
+//
+//	tMines = new unsigned int[g.probleme.nbMines];
+//
+//	for (unsigned int m = 0; m < g.probleme.nbMines; m++) {
+//		std::cin >> tMines[m];
+//	}
+//
+//	std::cin >> g.histo.nbCoups;
+//
+//	g.histo.coups = new Coup[g.histo.nbCoups];
+//
+//	for (unsigned int c = 0; c < g.histo.nbCoups; c++) {
+//		std::cin >> g.histo.coups[c];
+//		//strncpy(mot, g.histo.coups[c], strlen(mot));
+//	}
+//	
+//	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes << " " << g.probleme.nbMines << " ";
+//	for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
+//		std::cout << tMines[i] << " ";
+//	}
+//
+//	std::cout << g.histo.nbCoups << " ";
+//
+//	for (unsigned int j = 0; j < g.histo.nbCoups; j++) {
+//		std::cout << g.histo.coups[j] << " ";
+//	}
+//
+//	std::cout << std::endl;
 
-	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes >> g.probleme.nbMines;
+	/*for (unsigned int grL = 0; grL < lignes; grL++) {
+		gr[grL] = new Grille[colonnes];
+	}*/
 
-	tMines = new unsigned int[g.probleme.nbMines];
+	printGrid(g, 3, 3);
 
-	for (unsigned int m = 0; m < g.probleme.nbMines; m++) {
-		std::cin >> tMines[m];
-	}
+	/*delete[] tMines;
+	delete[] g.histo.coups;*/
+}
 
-	std::cin >> g.histo.nbCoups;
-
-	g.histo.coups = new Coup[g.histo.nbCoups];
-
-	for (unsigned int c = 0; c < g.histo.nbCoups; c++) {
-		std::cin >> g.histo.coups[c];
-	}
-	//pas obligé de faire une seule ligne avec toutes les commandes, fait des boucles.
-	//pour extraire les sous chaines, voir strncpy et atoi (convertir)
-
-	//historique : boucle for lorsque l'on fournit le nombre de coups.
-	
-	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes << " " << g.probleme.nbMines << " ";
-	for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
-		std::cout << tMines[i] << " ";
-	}
-
-	std::cout << g.histo.nbCoups << " ";
-
-	for (unsigned int j = 0; j < g.histo.nbCoups; j++) {
-		std::cout << g.histo.coups[j] << " ";
-	}
-
+void printGrid(const Grille& g, unsigned int lignes, unsigned int colonnes) {
+	std::cout << lignes << " " << colonnes;
 	std::cout << std::endl;
-	delete[] tMines;
-	delete[] g.histo.coups;
+	for (unsigned int i = 0; i < lignes; i++) {
+		for (unsigned int j = 0; j < colonnes; j++) {
+			std::cout << "___" << std::endl;
+			std::cout << "| " << " ";
+			if (i == lignes - 1) std::cout << " |" << std::endl;
+			if (j == colonnes - 1) std::cout << "___";
+		}
+	}
 }
 
 void genererMines(Probleme& p, unsigned int mines[]) {
