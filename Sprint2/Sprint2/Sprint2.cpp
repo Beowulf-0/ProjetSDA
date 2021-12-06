@@ -3,8 +3,7 @@
 #include <cassert>
 #include <random>
 
-typedef char Coup[3];
-
+typedef char *Coup;
 /**
 *	@brief représente un problème dans une partie de démineur
 */
@@ -93,8 +92,6 @@ void createProblem(Probleme& p) {
 //pas obligé de faire une seule ligne avec toutes les commandes, fait des boucles.
 //pour extraire les sous chaines, voir strncpy et atoi (convertir)
 
-//historique : boucle for lorsque l'on fournit le nombre de coups.
-
 /**	@brief réalise une grille à partir du nombre de lignes, de colonnes, de mines, des positions des mines et de l'historique de coups
 *	@param[in-out] g, la grille créé
 *
@@ -102,62 +99,70 @@ void createProblem(Probleme& p) {
 void createGrid(Grille& g) {
 	unsigned int *tMines = g.probleme.tabMines;
 
-	unsigned int lignes = g.probleme.nbLignes;
-	unsigned int colonnes = g.probleme.nbColonnes;
+	char tmp[10];
+	char coup[10];
+	int position;
+	unsigned int lignes = position / g.probleme.nbLignes;
+	unsigned int colonnes = position % g.probleme.nbColonnes;
+	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes >> g.probleme.nbMines;
 
-	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes /*>> g.probleme.nbMines*/;
+	tMines = new unsigned int[g.probleme.nbMines];
 
-	//tMines = new unsigned int[g.probleme.nbMines];
+	for (unsigned int m = 0; m < g.probleme.nbMines; m++) {
+		std::cin >> tMines[m];
+	}
 
-	//for (unsigned int m = 0; m < g.probleme.nbMines; m++) {
-	//	std::cin >> tMines[m];
-	//}
+	std::cin >> g.histo.nbCoups;
 
-	//std::cin >> g.histo.nbCoups;
+	g.histo.coups = new Coup[g.histo.nbCoups];
+	g.tabGrille = new unsigned int*[g.probleme.nbLignes];
 
-	//g.tabGrille = new unsigned int*[lignes];
-	//g.histo.coups = new Coup[g.histo.nbCoups];
-	//
-	//for (unsigned int c = 0; c < g.histo.nbCoups; c++) {
-	//	std::cin >> g.histo.coups[c];
-	//}
+	for (unsigned int grL = 0; grL < g.probleme.nbLignes; grL++) {
+		g.tabGrille[grL] = new unsigned int[g.probleme.nbColonnes];
+	}
+	
+	for (unsigned int c = 0; c < g.histo.nbCoups; c++) {
+		std::cin >> coup;
+		strcpy(g.histo.coups[c], coup);
+		strncpy(tmp, coup + 1, strlen(coup) - 1);
+		position = atoi(tmp);
+		g.tabGrille[lignes][colonnes] = tMines[c];
+	}
 
-	//std::cout << lignes << " " << colonnes << " " << g.probleme.nbMines << " ";
-	//for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
-	//	std::cout << tMines[i] << " ";
-	//}
+	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes << " " << g.probleme.nbMines << " ";
+	for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
+		std::cout << tMines[i] << " ";
+	}
 
-	//std::cout << g.histo.nbCoups << " ";
+	std::cout << g.histo.nbCoups << " ";
 
-	//for (unsigned int j = 0; j < g.histo.nbCoups; j++) {
-	//	std::cout << g.histo.coups[j] << " ";
-	//}
+	for (unsigned int j = 0; j < g.histo.nbCoups; j++) {
+		std::cout << g.histo.coups[j] << " ";
+	}
 
-	//std::cout << std::endl;
-
-	//for (unsigned int grL = 0; grL < lignes; grL++) {
-	//	g.tabGrille[grL] = new unsigned int[colonnes];
-	//}
+	std::cout << std::endl;
 
 	printGrid(g);
 
-	/*for (unsigned int k = 0; k < lignes; k++) {
+	for (unsigned int k = 0; k < lignes; k++) {
 		delete[] g.tabGrille[k];
 	}
 	delete[] tMines;
-	delete[] g.histo.coups;*/
+	
 }
+
+
 //vérifier comment convertir un entier en char.
 //afficherGrille : affiche les ___ / || suivi du contenu des variables (à actualiser à chaque coup) / convertir un chiffre en char. / Si c'est D : 
 void printGrid(const Grille& g) {
 	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes;
 	std::cout << std::endl;
-	for (unsigned int i = 0; i <= g.probleme.nbColonnes; i++) {
+	for (unsigned int i = 0; i < g.probleme.nbColonnes; i++) {
 		for (unsigned int j = 0; j < g.probleme.nbLignes; j++) {
-			if (i % 2 == 0) std::cout << " ---";
-			else if (i % 2 == 1 && j == 0) std::cout << "| " << "D" << " |";
-			if (j == g.probleme.nbLignes - 1) std::cout << std::endl;
+			if (j == 0) std::cout << "| " << " |";
+			else std::cout << "  |";
 		}
+		std::cout << std::endl;
 	}
 }
 
@@ -167,7 +172,6 @@ void genererMines(Probleme& p, unsigned int *mines) {
 		mines[m] = std::rand() % limitePos;
 	}
 }
-
 
 void tests() {
 
