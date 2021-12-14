@@ -1,178 +1,254 @@
-#include <iostream>
-#include <time.h>
-#include <cassert>
-#include <random>
-
-typedef char *Coup;
 /**
-*	@brief représente un problème dans une partie de démineur
-*/
-struct Probleme {
-	unsigned int nbLignes;
-	unsigned int nbColonnes;
-	unsigned int nbMines;
-	unsigned int *tabMines;
+ * @name MineSweeper
+ * @brief Démineur simple sans interface graphique.
+ *
+ * @authors BadiiiX & Beowulf
+ * @version 0.0.1
+ */
+
+#include <iostream>
+#include <random>
+#include <string>
+#include <time.h>
+
+enum LIMITS {
+	COLUMNS = 32,
+	LINES = 32
+};
+//tant que c'est différent de 0, on démasque la case mais pas les voisines, sinon si c'est égal à zéro, on démasque la case aux alentours. 
+enum ELEMENTS {
+	BOMB = 1,
+	VOID = 0,
+	VIEWED = -1
+};
+//type énuméré pour les lettres
+typedef int Mine;
+
+struct Stroke {
+	char letter;
+	unsigned int pos;
 };
 
 struct Historique {
-	unsigned int nbCoups;
-	Coup *coups;
+	unsigned nbrStrokes;
+	Stroke *strokes;
+};
+
+struct Problem {
+	unsigned lineNumber;
+	unsigned columnNumber;
+	unsigned mineNumber;
+	Mine *mineLoc;
 };
 
 struct Grille {
-	Probleme probleme;
-	unsigned int** tabGrille;
+	Problem pb;
+	unsigned **tab;
 	Historique histo;
 };
+void shuffleArray(unsigned int *tab);
 
-/**
-*	@brief Crée un problème
-*	@param[in-out] p, le problème
-*/
-void createProblem(Probleme& p);
+void generateMine(Problem *pb, Mine *mineList);
 
-/**	@brief Génère des mines sur des positions aléatoires
-*	@param[in-out] p, le problème
-*	@param[in-out] mines, le tableau de mines
-*/
-void genererMines(Probleme& p, unsigned int *mines);
+void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines);
 
-/**	@brief Créer une grille à partir d'un problème et de l'historique de coups
-*	@param[in-out] g, la grille
-*/
-void createGrid(Grille& g);
+void generateGrid(Grille *gr);
 
-void printGrid(const Grille& g);
+void setStroke(Grille &gr);
 
-int main() {
-	srand((unsigned int)time(NULL));
-
-	Probleme p;
-	Grille g;
-
-	int commande;
-
-	while (true) {
-		std::cin >> commande;
-		switch (commande) {
-		case 1:
-			createProblem(p);
-			break;
-		case 2:
-			createGrid(g);
-			break;
-
-		case 5:
-			//
-			break;
-		case 6:
-			return 0;
-			break;
-		}
-	}
-
+void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines) {
+	pb->lineNumber = lines;
+	pb->columnNumber = column;
+	pb->mineNumber = mines;
+	pb->mineLoc = new Mine[pb->mineNumber];
 }
 
-void createProblem(Probleme& p) {
-
-	std::cin >> p.nbLignes >> p.nbColonnes >> p.nbMines;
-
-	p.tabMines = new unsigned int[p.nbMines];
-
-	genererMines(p, p.tabMines);
-
-	std::cout << p.nbLignes << " " << p.nbColonnes << " " << p.nbMines;
-
-	for (unsigned int i = 0; i < p.nbMines; i++) {
-		std::cout << " " << p.tabMines[i];
-	}
-	std::cout << std::endl;
+void defineHisto(Historique *hist, unsigned nbrStroke) {
+	hist->nbrStrokes = nbrStroke;
+	hist->strokes = new Stroke[hist->nbrStrokes];
 }
 
-//pas obligé de faire une seule ligne avec toutes les commandes, fait des boucles.
-//pour extraire les sous chaines, voir strncpy et atoi (convertir)
-
-/**	@brief réalise une grille à partir du nombre de lignes, de colonnes, de mines, des positions des mines et de l'historique de coups
-*	@param[in-out] g, la grille créé
+void shuffleArray(Problem *p, unsigned int *tab) {
+	unsigned int maxValue = p->lineNumber * p->columnNumber;
+	unsigned int ech;
+	for (unsigned int i = 0; i < p->mineNumber; i++) {
+		unsigned j = std::rand() % maxValue;
+		ech = tab[j];
+		tab[j] = tab[i];
+		tab[i] = ech;
+	}
+}
+// les nombres générés doivent être les bons : créer un tableau de taille 0 à n et l'initialiser, utiliser l'algo pour mélanger et prendre les n premières valeurs
+/** Algo pour mélanger : 
 *
 */
-void createGrid(Grille& g) {
-	unsigned int *tMines = g.probleme.tabMines;
-
-	char tmp[10];
-	char coup[10];
-	int position;
-	unsigned int lignes = position / g.probleme.nbLignes;
-	unsigned int colonnes = position % g.probleme.nbColonnes;
-	std::cin >> g.probleme.nbLignes >> g.probleme.nbColonnes >> g.probleme.nbMines;
-
-	tMines = new unsigned int[g.probleme.nbMines];
-
-	for (unsigned int m = 0; m < g.probleme.nbMines; m++) {
-		std::cin >> tMines[m];
+void generateMine(Problem *pb, Mine *mineList) {
+	//TODO: Security about Problem
+	unsigned int maxValue = pb->columnNumber * pb->lineNumber;
+	unsigned *tab;
+	tab = new unsigned int[maxValue];
+	for (unsigned i = 0; i < maxValue; i++) {
+		tab[i] = i;
 	}
-
-	std::cin >> g.histo.nbCoups;
-
-	g.histo.coups = new Coup[g.histo.nbCoups];
-	g.tabGrille = new unsigned int*[g.probleme.nbLignes];
-
-	for (unsigned int grL = 0; grL < g.probleme.nbLignes; grL++) {
-		g.tabGrille[grL] = new unsigned int[g.probleme.nbColonnes];
+	shuffleArray(pb, tab);
+	for (unsigned m = 0; m < pb->mineNumber; m++) {
+		mineList[m] = tab[m];
 	}
-	
-	for (unsigned int c = 0; c < g.histo.nbCoups; c++) {
-		std::cin >> coup;
-		strcpy(g.histo.coups[c], coup);
-		strncpy(tmp, coup + 1, strlen(coup) - 1);
-		position = atoi(tmp);
-		g.tabGrille[lignes][colonnes] = tMines[c];
+	delete[] tab;
+}
+
+void setMines(Grille *gr) {
+	for (unsigned m = 0; m < gr->pb.mineNumber; m++) {
+		int mineLoc;
+		std::cin >> mineLoc;
+		gr->pb.mineLoc[m] = mineLoc;
 	}
+}
 
-	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes << " " << g.probleme.nbMines << " ";
-	for (unsigned int i = 0; i < g.probleme.nbMines; i++) {
-		std::cout << tMines[i] << " ";
-	}
-
-	std::cout << g.histo.nbCoups << " ";
-
-	for (unsigned int j = 0; j < g.histo.nbCoups; j++) {
-		std::cout << g.histo.coups[j] << " ";
-	}
-
-	std::cout << std::endl;
-
-	printGrid(g);
-
-	for (unsigned int k = 0; k < lignes; k++) {
-		delete[] g.tabGrille[k];
-	}
-	delete[] tMines;
+void detectedMines(Grille *gr) { adjacente : g/h : h/b : diagonale
 	
 }
 
+void setStroke(Grille &gr) {
+	for (unsigned int str = 0; str < gr.histo.nbrStrokes; str++) {
+		char stroke;
+		unsigned int pos;
+		std::cin >> stroke >> pos;
+		gr.histo.strokes[str].letter = stroke;
+		gr.histo.strokes[str].pos = pos;
+	}
+}
 
-//vérifier comment convertir un entier en char.
-//afficherGrille : affiche les ___ / || suivi du contenu des variables (à actualiser à chaque coup) / convertir un chiffre en char. / Si c'est D : 
-void printGrid(const Grille& g) {
-	std::cout << g.probleme.nbLignes << " " << g.probleme.nbColonnes;
-	std::cout << std::endl;
-	for (unsigned int i = 0; i < g.probleme.nbColonnes; i++) {
-		for (unsigned int j = 0; j < g.probleme.nbLignes; j++) {
-			if (j == 0) std::cout << "| " << " |";
-			else std::cout << "  |";
+void generateGrid(Grille *gr) {
+	gr->tab = new unsigned *[gr->pb.lineNumber];
+	for (unsigned i = 0; i < gr->pb.lineNumber; i++) {
+		gr->tab[i] = new unsigned[gr->pb.columnNumber];
+	}
+}
+
+void printGrid(const Grille *g) {
+	unsigned lines = g->pb.lineNumber,
+		columns = g->pb.columnNumber;
+
+	std::cout << lines << " " << columns << std::endl;
+	for (unsigned int i = 0; i < lines; i++) {
+		for (unsigned _ = 0; _ < columns; _++) {
+			std::cout << " ___";
+		}
+		std::cout << std::endl;
+		for (unsigned int j = 0; j < columns; j++) {
+			//Todo, create function to show elemnt about his value
+			std::cout << ((j == 0) ? "| " : " ") << g->tab[i][j] << " |";
 		}
 		std::cout << std::endl;
 	}
-}
-
-void genererMines(Probleme& p, unsigned int *mines) {
-	for (unsigned int m = 0; m < p.nbMines; m++) {
-		unsigned int limitePos = p.nbColonnes * p.nbLignes;
-		mines[m] = std::rand() % limitePos;
+	for (unsigned _ = 0; _ < columns; _++) {
+		std::cout << " ___";
 	}
 }
 
-void tests() {
+void fillGrid(Grille *g) {
+	unsigned lines = g->pb.lineNumber,
+		columns = g->pb.columnNumber;
 
+	for (unsigned int i = 0; i < lines; i++) {
+		for (unsigned int j = 0; j < columns; j++) {
+			unsigned readableNum = i * lines + j;
+			for (unsigned m = 0; m < g->pb.mineNumber; m++) {
+				if (g->pb.mineLoc[m] == readableNum) {
+					g->tab[i][j] = ELEMENTS::BOMB;
+				}
+			}
+			if (g->tab[i][j] != ELEMENTS::BOMB) g->tab[i][j] = ELEMENTS::VOID;
+		}
+	}
+}
+
+
+void createProblem() {
+	unsigned line, column, mines;
+	Problem problem{};
+
+	std::cin >> line >> column >> mines;
+
+	//Generate mines
+	problem.lineNumber = line;
+	problem.columnNumber = column;
+	problem.mineNumber = mines;
+	problem.mineLoc = new Mine[problem.mineNumber];
+	generateMine(&problem, problem.mineLoc);
+
+	std::cout << problem.lineNumber << " " << problem.columnNumber 
+		<< " " << problem.mineNumber << " ";
+	for (unsigned i = 0; i < problem.mineNumber; i++) {
+		std::cout << problem.mineLoc[i] << " ";
+	}
+
+	std::cout << std::endl;
+
+	//delete memory
+	delete[] problem.mineLoc;
+}
+
+void createGrille() {
+	unsigned line, column, nbrMine, nbrStroke;
+	Grille gr{};
+
+	std::cin >> line >> column >> nbrMine;
+
+	defineProblem(&gr.pb, line, column, nbrMine);
+	generateGrid(&gr);
+	setMines(&gr);
+
+	std::cin >> nbrStroke;
+
+	//defineHisto(&gr.histo, nbrStroke);
+	//setStroke(gr);
+	fillGrid(&gr);
+	printGrid(&gr);
+
+	//delete memory
+	for (unsigned i = 0; i < line; i++) {
+		delete[] gr.tab[i];
+	}
+	delete[] gr.tab;
+	//delete[] gr.histo.strokes;
+}
+
+int main() {
+
+	srand((unsigned)time(NULL));
+
+	int cmd;
+	bool loop = true;
+
+	while (loop) {
+		std::cin >> cmd;
+		switch (cmd) {
+		case 1:
+			createProblem();
+			break;
+
+		case 2:
+			createGrille();
+			break;
+
+		case 3:
+			break;
+
+		case 4:
+			break;
+
+		case 5:
+			break;
+
+		case 6:
+			loop = false;
+
+		default:
+			std::cin.ignore(17, '\n');
+			std::cout << "Commande inconnue" << std::endl;
+
+		}
+	}
 }
