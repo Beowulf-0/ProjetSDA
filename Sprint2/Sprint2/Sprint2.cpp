@@ -46,7 +46,7 @@ struct Grille {
 	unsigned **tab;
 	Historique histo;
 };
-void shuffleArray(unsigned int *tab);
+void shuffleArray(Problem *p, unsigned int *tab);
 
 void generateMine(Problem *pb, Mine *mineList);
 
@@ -79,9 +79,6 @@ void shuffleArray(Problem *p, unsigned int *tab) {
 	}
 }
 // les nombres générés doivent être les bons : créer un tableau de taille 0 à n et l'initialiser, utiliser l'algo pour mélanger et prendre les n premières valeurs
-/** Algo pour mélanger : 
-*
-*/
 void generateMine(Problem *pb, Mine *mineList) {
 	//TODO: Security about Problem
 	unsigned int maxValue = pb->columnNumber * pb->lineNumber;
@@ -90,7 +87,9 @@ void generateMine(Problem *pb, Mine *mineList) {
 	for (unsigned i = 0; i < maxValue; i++) {
 		tab[i] = i;
 	}
+
 	shuffleArray(pb, tab);
+
 	for (unsigned m = 0; m < pb->mineNumber; m++) {
 		mineList[m] = tab[m];
 	}
@@ -104,10 +103,63 @@ void setMines(Grille *gr) {
 		gr->pb.mineLoc[m] = mineLoc;
 	}
 }
+//fonction pour réveler les cases vides : 15 lignes et 20 lignes pour les autres.
 
-void detectedMines(Grille *gr) { adjacente : g/h : h/b : diagonale
-	
+bool validCase(Grille *gr, unsigned int x, unsigned int y) {
+	return (x >= 0 && x <= gr->pb.lineNumber) && (y >= 0 && y <= gr->pb.columnNumber);
 }
+
+bool detectedMines(Grille *gr, unsigned int x, unsigned int y) { //adjacente : g/h : h/b : diagonale
+	if (gr->tab[x][y] == ELEMENTS::BOMB) return true;
+	else return false;
+}
+
+/**
+*	@brief Incrémente les cases à proximités de mines
+*	@param[in,out] gr, la grille
+*	@param[in] x, l'abscisse x de la grille
+*	@param[in] y, l'ordonnée y de la grille
+*/
+unsigned int minesNearby(Grille *gr, unsigned int x, unsigned int y) {
+	unsigned int i = 0;
+	if (validCase(gr, x + 1, y) == true) {
+		if (detectedMines(gr, x + 1, y) == true) i++;
+	}
+	if (validCase(gr, x + 1, y + 1) == true) {
+		if (detectedMines(gr, x + 1, y + 1) == true) i++;
+	}
+	if (validCase(gr, x, y + 1) == true) {
+		if (detectedMines(gr, x, y + 1) == true) i++;
+	}
+	if (validCase(gr, x - 1, y + 1) == true) {
+		if (detectedMines(gr, x - 1, y + 1) == true) i++;
+	}
+	if (validCase(gr, x - 1, y) == true) {
+		if (detectedMines(gr, x - 1, y) == true) i++;
+	}
+	if (validCase(gr, x - 1, y - 1) == true) {
+		if (detectedMines(gr, x - 1, y - 1) == true) i++;
+	}
+	if (validCase(gr, x, y - 1) == true) {
+		if (detectedMines(gr, x, y - 1) == true) i++;
+	}
+	if (validCase(gr, x + 1, y - 1) == true) {
+		if (detectedMines(gr, x + 1, y - 1) == true) i++;
+	}
+	return i;
+}
+
+//void checkStroke(Grille *gr, unsigned int x, unsigned int y) {
+//	
+//	for (unsigned int i = 0; i < gr->histo.nbrStrokes; i++) {
+//		if (gr->histo.strokes[i].letter == 'D') {
+//			//unmaskMines(unsigned int **tab)
+//		}
+//		else if (gr->histo.strokes[i].letter == 'M') {
+//			
+//		}
+//	}
+//}
 
 void setStroke(Grille &gr) {
 	for (unsigned int str = 0; str < gr.histo.nbrStrokes; str++) {
@@ -160,6 +212,7 @@ void fillGrid(Grille *g) {
 				}
 			}
 			if (g->tab[i][j] != ELEMENTS::BOMB) g->tab[i][j] = ELEMENTS::VOID;
+			g->tab[i][j] = minesNearby(g, i, j);
 		}
 	}
 }
@@ -200,10 +253,8 @@ void createGrille() {
 	generateGrid(&gr);
 	setMines(&gr);
 
-	std::cin >> nbrStroke;
+	//std::cin >> nbrStroke;
 
-	//defineHisto(&gr.histo, nbrStroke);
-	//setStroke(gr);
 	fillGrid(&gr);
 	printGrid(&gr);
 
@@ -212,7 +263,6 @@ void createGrille() {
 		delete[] gr.tab[i];
 	}
 	delete[] gr.tab;
-	//delete[] gr.histo.strokes;
 }
 
 int main() {
