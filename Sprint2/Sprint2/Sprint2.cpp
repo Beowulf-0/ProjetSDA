@@ -106,7 +106,7 @@ void setMines(Grille *gr) {
 //fonction pour réveler les cases vides : 15 lignes et 20 lignes pour les autres.
 
 bool validCase(Grille *gr, unsigned int x, unsigned int y) {
-	return (x >= 0 && x <= gr->pb.lineNumber) && (y >= 0 && y <= gr->pb.columnNumber);
+	return (x >= 0 && x < gr->pb.lineNumber) && (y >= 0 && y < gr->pb.columnNumber);
 }
 
 bool detectedMines(Grille *gr, unsigned int x, unsigned int y) { //adjacente : g/h : h/b : diagonale
