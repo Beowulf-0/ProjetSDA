@@ -152,7 +152,7 @@ unsigned int minesNearby(Grille *gr, unsigned int x, unsigned int y) {
 
     //Auto && testing element permet de boucler les éléments du tableau de toTest
     // donc testingElement aura au début la première valeur de toTest puis la deuxième... etc
-    for (auto &&testingElement: toTest) {
+    for (auto &testingElement: toTest) {
         if (validCase(gr, testingElement[0], testingElement[1])
             && detectedMines(gr, testingElement[0], testingElement[1]))
             mineCount++;
