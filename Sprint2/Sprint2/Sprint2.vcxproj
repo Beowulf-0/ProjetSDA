@@ -123,7 +123,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Chaine.cpp" />
+    <ClCompile Include="Element.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="Grille.cpp" />
+    <ClCompile Include="Historique.cpp" />
+    <ClCompile Include="Problem.cpp" />
     <ClCompile Include="Sprint2.cpp" />
+    <ClCompile Include="Stroke.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Chaine.h" />
+    <ClInclude Include="Element.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="Grille.h" />
+    <ClInclude Include="Historique.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Mine.h" />
+    <ClInclude Include="Problem.h" />
+    <ClInclude Include="Stroke.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
