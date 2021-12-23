@@ -92,7 +92,9 @@ void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines)
     pb->mineLoc = new Mine[pb->mineNumber];
 }
 
-void defineHisto(Historique *hist, unsigned nbrStroke) {
+void defineHisto(Historique *hist) {
+    unsigned nbrStroke;
+    std::cin >> nbrStroke;
     hist->nbrStrokes = nbrStroke;
     hist->strokes = new Stroke[hist->nbrStrokes];
 }
@@ -117,24 +119,19 @@ void generateMine(Problem *pb, Mine *mineList) {
 
 void setMines(Grille *gr) {
     for (unsigned m = 0; m < gr->pb.mineNumber; m++) {
-        unsigned mineLoc;
+        Mine mineLoc;
 
         std::cin >> mineLoc;
         gr->pb.mineLoc[m] = mineLoc;
-
-        unsigned line = mineLoc / gr->pb.columnNumber,
-                column = mineLoc % gr->pb.columnNumber;
-
-        //Instant place mine.
-        if (validCase(gr, line, column)) gr->tab[line][column].content = CONTENT::MINE;
     }
 }
 
-void placeMines(Grille *g, unsigned i, unsigned j, unsigned numToCheck) {
-    for (unsigned m = 0; m < g->pb.mineNumber; m++) {
-        if (g->pb.mineLoc[m] == numToCheck) {
-            g->tab[i][j].content = CONTENT::MINE;
-        }
+void placeMines(Grille *gr) {
+    for (unsigned m = 0; m < gr->pb.mineNumber; m++) {
+        Mine mine = gr->pb.mineLoc[m];
+        unsigned line = mine / gr->pb.columnNumber,
+                column = mine % gr->pb.columnNumber;
+        if(validCase(gr, line, column)) gr->tab[line][column].content = CONTENT::MINE;
     }
 }
 
@@ -265,17 +262,17 @@ void printGrid(const Grille *g) {
     }
 }
 
-void fillGrid(Grille *g) {
-    unsigned lines = g->pb.lineNumber,
-            columns = g->pb.columnNumber;
+void fillGrid(Grille *gr) {
+    unsigned lines = gr->pb.lineNumber,
+            columns = gr->pb.columnNumber;
+
+    placeMines(gr);
 
     for (unsigned i = 0; i < lines; i++) {
         for (unsigned j = 0; j < columns; j++) {
             unsigned readableNum = i * lines + j;
-            placeMines(g, i, j, readableNum);
-            if (g->tab[i][j].content != CONTENT::MINE) g->tab[i][j].content = minesNearby(g, i, j);
-            g->tab[i][j].state = STATE::HIDED;
-            //
+            if (gr->tab[i][j].content != CONTENT::MINE) gr->tab[i][j].content = minesNearby(gr, i, j);
+            gr->tab[i][j].state = STATE::HIDED;
         }
     }
 }
@@ -317,13 +314,9 @@ void createGrille() {
 
     fillGrid(&gr);
 
-    std::cin >> nbrStroke;
-    //TODO : STROKE SYSTEM
-
-    defineHisto(&gr.histo, nbrStroke);
-
+    //Stroke System
+    defineHisto(&gr.histo);
     setStroke(&gr);
-
     executeStoke(&gr);
 
     printGrid(&gr);
