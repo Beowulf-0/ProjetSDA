@@ -7,19 +7,13 @@
  */
 
 #include <iostream>
-#include <random>
 #include <string>
 #include <ctime>
 
-enum LIMITS {
-    COLUMNS = 32,
-    LINES = 32
-};
-//tant que c'est différent de 0, on démasque la case mais pas les voisines, sinon si c'est égal à zéro, on démasque la case aux alentours.
 enum STATE {
-    SHOWED = 1,
+    VISIBLE = 1,
     MARKED = 2,
-    HIDED = 0
+    HIDDEN = 0
 };
 
 enum CONTENT {
@@ -131,7 +125,7 @@ void placeMines(Grille *gr) {
         Mine mine = gr->pb.mineLoc[m];
         unsigned line = mine / gr->pb.columnNumber,
                 column = mine % gr->pb.columnNumber;
-        if(validCase(gr, line, column)) gr->tab[line][column].content = CONTENT::MINE;
+        if (validCase(gr, line, column)) gr->tab[line][column].content = CONTENT::MINE;
     }
 }
 
@@ -155,8 +149,8 @@ unsigned minesNearby(Grille *gr, unsigned int x, unsigned int y) {
     };
     unsigned int toTest[TESTS_TO_DO][2] =
             {
-                    {x,     y + 1},
-                    {x,     y - 1},
+                    {x + 0, y + 1},
+                    {x + 0, y - 1},
                     {x + 1, y + 0},
                     {x + 1, y + 1},
                     {x + 1, y - 1},
@@ -177,10 +171,11 @@ unsigned minesNearby(Grille *gr, unsigned int x, unsigned int y) {
 
 char showElement(Case elementType) {
     switch (elementType.state) {
-        case STATE::SHOWED:
-            if (elementType.content != CONTENT::MINE) return (char) (48 + elementType.content);
+        case STATE::VISIBLE:
+            if (elementType.content == CONTENT::VOID) return ' ';
+            else if (elementType.content != CONTENT::MINE) return (char) (48 + elementType.content);
             else return 'M';
-        case STATE::HIDED:
+        case STATE::HIDDEN:
             return '.';
         case STATE::MARKED:
             return 'x';
@@ -189,17 +184,33 @@ char showElement(Case elementType) {
     }
 }
 
-//void checkStroke(Grille *gr, unsigned int x, unsigned int y) {
-//
-//	for (unsigned int i = 0; i < gr->histo.nbrStrokes; i++) {
-//		if (gr->histo.strokes[i].letter == 'D') {
-//			//unmaskMines(unsigned int **tab)
-//		}
-//		else if (gr->histo.strokes[i].letter == 'M') {
-//
-//		}
-//	}
-//}
+void demask(Grille *gr, unsigned int x, unsigned int y) {
+    enum {
+        TESTS_TO_DO = 8
+    };
+    unsigned int toTest[TESTS_TO_DO][2] =
+            {
+                    {x + 0, y + 1},
+                    {x + 0, y - 1},
+                    {x + 1, y + 0},
+                    {x + 1, y + 1},
+                    {x + 1, y - 1},
+                    {x - 1, y + 0},
+                    {x - 1, y + 1},
+                    {x - 1, y - 1},
+            };
+
+    Case *c = &(gr->tab[x][y]);
+    c->state = STATE::VISIBLE;
+
+    if (c->content != CONTENT::VOID) return;
+
+    for (auto &tElm: toTest) {
+        if (validCase(gr, tElm[0], tElm[1]) && (gr->tab[tElm[0]][tElm[1]]).state == STATE::HIDDEN) {
+            demask(gr, tElm[0], tElm[1]);
+        }
+    }
+}
 
 void setStroke(Grille *gr) {
     for (unsigned int str = 0; str < gr->histo.nbrStrokes; str++) {
@@ -222,8 +233,7 @@ void executeStoke(Grille *gr) {
                     gr->tab[line][column].state = MARKED;
                 break;
             case 'D':
-                if (validCase(gr, line, column)) continue;
-                //FUNCTION TO DEMASK
+                if (validCase(gr, line, column)) demask(gr, line, column);
                 break;
             default:
                 //Throw Error ?
@@ -250,7 +260,6 @@ void printGrid(const Grille *g) {
         }
         std::cout << "\n";
         for (unsigned int j = 0; j < columns; j++) {
-            //Todo, create function to show elemnt about his value
             std::cout << ((j == 0) ? "| " : " ")
                       << showElement(g->tab[i][j])
                       << " |";
@@ -260,6 +269,7 @@ void printGrid(const Grille *g) {
     for (unsigned _ = 0; _ < columns; _++) {
         std::cout << " ___";
     }
+    std::cout << "\n";
 }
 
 void fillGrid(Grille *gr) {
@@ -272,7 +282,7 @@ void fillGrid(Grille *gr) {
         for (unsigned j = 0; j < columns; j++) {
             unsigned readableNum = i * lines + j;
             if (gr->tab[i][j].content != CONTENT::MINE) gr->tab[i][j].content = minesNearby(gr, i, j);
-            gr->tab[i][j].state = STATE::HIDED;
+            gr->tab[i][j].state = STATE::HIDDEN;
         }
     }
 }
