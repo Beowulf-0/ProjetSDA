@@ -51,8 +51,8 @@ void setStroke(Grille *gr);
 /**
 *	@brief vérifie si une case est valide
 *	@param[in] gr, la grille
-*	@param[in]
-*	@param[in]
+*	@param[in] x, l'abscisse
+*	@param[in] y, l'ordonnée
 *	@return true si x/y sont inférieurs au nombre de lignes / colonnes
 *	et supérieurs ou égales à 0, sinon false
 */
@@ -67,6 +67,12 @@ bool validCase(Grille *gr, unsigned int x, unsigned int y);
 */
 bool detectedMines(Grille *gr, unsigned int x, unsigned int y);
 
+/**
+*	@brief démasque la case ciblée et les cases aux alentours si la case démasquée est vide
+*	@param[in,out] gr, la grille
+*	@param[in] x, l'abscisse
+*	@param[in] y, l'ordonnée
+*/
 void demask(Grille *gr, unsigned int x, unsigned int y);
 
 /**
@@ -89,5 +95,17 @@ void setMines(Grille *gr);
 *	sinon 0 dans le case ou la case incrémentée contient une mine
 */
 unsigned minesNearby(Grille *gr, unsigned int x, unsigned int y);
+
+/**
+*	@brief détermine si la partie est perdue
+*/
+void gameLost();
+
+/**
+*	@brief vérifie si la partie est perdue
+*	@param[in] gr, la grille
+*	@return vrai si une case vide est démasqué ou si une case minée est marquée, sinon false.
+*/
+bool isLost(const Grille *gr);
 
 #endif // !_GRILLE_

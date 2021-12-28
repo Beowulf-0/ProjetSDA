@@ -108,14 +108,33 @@ unsigned minesNearby(Grille *gr, unsigned int x, unsigned int y) {
 	return mineCount;
 }
 
+/**
+*	@brief vérifie si une case contient une mine
+*	@param[in] gr, la grille
+*	@param[in] x, l'abscisse
+*	@param[in] y, l'ordonnée
+*	@return true si le contenu de la case est une mine, sinon false
+*/
 bool detectedMines(Grille *gr, unsigned int x, unsigned int y) { //adjacente : g/h : h/b : diagonale
 	return gr->tab[x][y].content == CONTENT::MINE;
 }
 
+/**
+*	@brief vérifie si une case est valide
+*	@param[in] gr, la grille
+*	@param[in] x, l'abscisse
+*	@param[in] y, l'ordonnée
+*	@return true si x/y sont inférieurs au nombre de lignes / colonnes
+*	et supérieurs ou égales à 0, sinon false
+*/
 bool validCase(Grille *gr, unsigned int x, unsigned int y) {
 	return (x >= 0 && x < gr->pb.lineNumber) && (y >= 0 && y < gr->pb.columnNumber);
 }
 
+/**
+*	@brief rentre les coups de l'historique
+*	@param[in,out] gr, la grille
+*/
 void setStroke(Grille *gr) {
 	for (unsigned int str = 0; str < gr->histo.nbrStrokes; str++) {
 		char stroke;
@@ -150,6 +169,10 @@ void executeStroke(Grille *gr) {
 	}
 }
 
+/**
+*	@brief Affiche la grille de démineur
+*	@param[in] g, la grille
+*/
 void printGrid(const Grille *g) {
 	unsigned lines = g->pb.lineNumber,
 		columns = g->pb.columnNumber;
@@ -173,6 +196,10 @@ void printGrid(const Grille *g) {
 	std::cout << "\n";
 }
 
+/**
+*	@brief remplit la grille avec les mines
+*	@param[in,out] gr, la grille
+*/
 void fillGrid(Grille *gr) {
 	unsigned lines = gr->pb.lineNumber,
 		columns = gr->pb.columnNumber;
@@ -197,4 +224,56 @@ void generateGrid(Grille *gr) {
 	for (unsigned i = 0; i < gr->pb.lineNumber; i++) {
 		gr->tab[i] = new Case[gr->pb.columnNumber];
 	}
+}
+
+/**
+*	@brief vérifie si la partie est perdue
+*	@param[in] gr, la grille
+*	@return vrai si une case vide est démasqué ou si une case minée est marquée, sinon false.
+*/
+bool isLost(const Grille *gr) {
+	unsigned lines = gr->pb.lineNumber,
+		columns = gr->pb.columnNumber;
+	for (unsigned int i = 0; i < lines; i++) {
+		for (unsigned int j = 0; i < columns; j++) {
+			if (gr->tab[i][j].content == CONTENT::MINE
+				&& gr->tab[i][j].state == STATE::SHOWED) return true;
+			else if (gr->tab[i][j].state == STATE::MARKED
+				&& gr->tab[i][j].state == STATE::MARKED) return true;
+		}
+	}
+	return false;
+}
+
+void gameLost() {
+	unsigned line, column, nbrMine, nbrStroke;
+	Grille gr{};
+
+	std::cin >> line >> column >> nbrMine;
+
+	defineProblem(&gr.pb, line, column, nbrMine);
+	generateGrid(&gr);
+	setMines(&gr);
+
+	fillGrid(&gr);
+
+	//Stroke System
+	defineHisto(&gr.histo);
+	setStroke(&gr);
+	executeStroke(&gr);
+	
+	if (isLost(&gr)) {
+		std::cout << "game lost";
+	}
+	else {
+		std::cout << "game not lost";
+	}
+
+	//delete memory
+	for (unsigned i = 0; i < line; i++) {
+		delete[] gr.tab[i];
+	}
+	delete[] gr.tab;
+	delete[] gr.histo.strokes;
+	delete[] gr.pb.mineLoc;
 }
