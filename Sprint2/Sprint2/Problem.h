@@ -3,19 +3,24 @@
 
 #include "Mine.h"
 
-/*
-*	@brief représente un problème
-*/
+/**
+ * @file Problem.h
+ * @author WAHADA Mehdi & ALI Mehdi
+ * @version 1 28/12/2021
+ * @brief Le problème du démineur
+ */
+
+// représente le problème du démineur
 struct Problem {
 	unsigned lineNumber; // lineNumber, le nombre de lignes
-	unsigned columnNumber; // columnNumber, le nombre de colonnes
-	unsigned mineNumber; // mineNumber, le nombre de mines
+	unsigned columnNumber; //columnNumber, le nombre de colonnes
+	unsigned mineNumber; //mineNumber, le nombre de mines
 	Mine *mineLoc; // mineLoc, le tableau de mines
 };
 
-
-/*
-*	@brief crée un problème
+/**
+*	@brief affecte les valeurs des variables au problème 
+*	(et alloue dynamiquement le tableau de mines)
 *	@param[in,out] pb, le problème
 *	@param[in] lines, le nombre de lignes
 *	@param[in] column, le nombre de colonnes
@@ -23,22 +28,23 @@ struct Problem {
 */
 void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines);
 
-/*
-*	@brief génère des mines sur des positions aléatoires
-*	@param[in,out] pb, le problème
-*	@param[in,out] mineList, le tableau de mines
-*/
-void generateMine(Problem *pb, Mine *mineList);
-
-/*
-*	@brief mélange un tableau de positions de mines en fonction de sa taille
+/**
+*	@brief mélange un tableau de mines
 *	@param[in,out] p, le problème
 *	@param[in,out] tab, le tableau de mines
 */
 void shuffleArray(Problem *p, unsigned int *tab);
 
-/*
-*	@brief crée un problème de démineur
+/**
+*	@brief Génère des mines à des coordonnées aléatoires valides
+*	@param[in,out] pb, le problème
+*	@param[in,out] mineList, le tableau de mines
+*/
+void generateMine(Problem *pb, Mine *mineList);
+
+/**
+*	@brief affecte les valeurs des variables au problème
+*	(et alloue dynamiquement le tableau de mines)
 */
 void createProblem();
 

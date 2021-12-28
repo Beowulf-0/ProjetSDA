@@ -1,11 +1,13 @@
 #include "Historique.h"
+#include <iostream>
 
-/*
-*	@brief initialise un historique de coups
+/**
+*	@brief définit l'historique de coups et l'alloue dynamiquement
 *	@param[in,out] hist, l'historique de coups
-*	@param[in] nbrStroke, le nombre de coups
 */
-void defineHisto(Historique *hist, unsigned nbrStroke) {
+void defineHisto(Historique *hist) {
+	unsigned nbrStroke;
+	std::cin >> nbrStroke;
 	hist->nbrStrokes = nbrStroke;
 	hist->strokes = new Stroke[hist->nbrStrokes];
 }

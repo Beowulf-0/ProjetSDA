@@ -2,90 +2,92 @@
 #define _GRILLE_
 
 #include "Problem.h"
+#include "Case.h"
 #include "Historique.h"
 
+/**
+ * @file Grille.h
+ * @author WAHADA Mehdi & ALI Mehdi
+ * @version 1 28/12/2021
+ * @brief La grille du démineur
+ */
 
-/*
-*	@brief représente une grille
-*/
 struct Grille {
-	Problem pb; // pb, le problème
-	unsigned **tab; // tab, un tableau 2D représentant une grille de démineur
-	Historique histo; // histo, l'historique de coups
+	Problem pb;	// pb, le problème de la grille
+	Case **tab;	// tab, le tableau 2D de cases
+	Historique histo;	// histo, l'historique de coups
 };
 
-/*
-*	@brief vérifie si une case de la grille est valide
+/**
+*	@brief Alloue dynamiquement les colonnes de la grille
 *	@param[in,out] gr, la grille
-*	@param[in] x, l'abscisse 
-*	@param[in] y, l'ordonnée
-*	@return vrai si x / y <= 0 et >= au nombre de lignes / colonnes 
+*/
+void generateGrid(Grille *gr);
+
+/**
+*	@brief Affiche la grille de démineur
+*	@param[in] g, la grille
+*/
+void printGrid(const Grille *g);
+
+/**
+*	@brief remplit la grille avec les mines
+*	@param[in,out] gr, la grille
+*/
+void fillGrid(Grille *gr);
+
+/**
+*	@brief Analyse chaque coup de l'historique. Si la lettre du coup est un D, démasque la case ciblée et si c'est un M, la marque.
+*	@param[in,out] gr, la grille
+*/
+void executeStroke(Grille *gr);
+
+/**
+*	@brief rentre les coups de l'historique
+*	@param[in,out] gr, la grille
+*/
+void setStroke(Grille *gr);
+
+/**
+*	@brief vérifie si une case est valide
+*	@param[in] gr, la grille
+*	@param[in]
+*	@param[in]
+*	@return true si x/y sont inférieurs au nombre de lignes / colonnes 
+*	et supérieurs ou égales à 0, sinon false
 */
 bool validCase(Grille *gr, unsigned int x, unsigned int y);
 
-/*
-*	@brief vérifie s'il y a des mines sur la case choisie
-*	@param[in,out] gr, la grille
+/**
+*	@brief vérifie si une case contient une mine
+*	@param[in] gr, la grille
 *	@param[in] x, l'abscisse
 *	@param[in] y, l'ordonnée
-*	@return vrai si la case[x][y] contient une mine
+*	@return true si le contenu de la case est une mine, sinon false
 */
 bool detectedMines(Grille *gr, unsigned int x, unsigned int y);
+
+void demask(Grille *gr, unsigned int x, unsigned int y);
+
+/**
+*	@brief Crée la grille de démineur
+*/
+void createGrille();
+
+/**
+*	@brief Entre les coordonnées des mines sur la grille
+*	@param[in,out] gr, la grille
+*/
+void setMines(Grille *gr);
 
 /**
 *	@brief Incrémente les cases à proximités de mines
 *	@param[in,out] gr, la grille
 *	@param[in] x, l'abscisse x de la grille
 *	@param[in] y, l'ordonnée y de la grille
-*	@return le nombre de mines à proximité de la case.
+*	@return mineCount, le nombre de mines adjacentes à la case 
+*	sinon 0 dans le case ou la case incrémentée contient une mine
 */
-unsigned int minesNearby(Grille *gr, unsigned int x, unsigned int y);
-
-/*
-*	@brief initialise les colonnes de la grille
-*	@param[in,out] gr, la grille
-*/
-void generateGrid(Grille *gr);
-
-/*
-*	@brief affiche la grille du démineur
-*	@param[in] g, la grille
-*/
-void printGrid(const Grille *g);
-
-/*
-*	@brief Crée une grille de démineur
-*/
-void createGrille();
-
-/*
-*	@brief Démasque une case. Si elle est vide, démasque les autres aux alentours, sinon n'affiche que la case ciblé.
-*	@param[in,out] gr, la grille
-*	@param[in] x, l'abscisse
-*	@param[in] y, l'ordonnée
-*/
-void unmaskMines(Grille &gr, unsigned int x, unsigned int y);
-
-/*
-*	@brief rentre les positions des mines dans le tableau associé
-*	@param[in,out] gr, la grille
-*/
-void setMines(Grille *gr);
-
-/*
-*	@brief place les mines 
-*	@param[in,out] g, la grille
-*	@param[in] i, la ligne 
-*	@param[in] j, la colonne
-*	@param[in] numToCheck, le numéro correspondant à la position de la mine
-*/
-void placeMines(Grille *g, unsigned i, unsigned j, unsigned numToCheck);
-
-/*
-*	@brief initialise les colonnes de la grille
-*	@param[in,out] g, la grille
-*/
-void fillGrid(Grille *g);
+unsigned minesNearby(Grille *gr, unsigned int x, unsigned int y);
 
 #endif // !_GRILLE_
-

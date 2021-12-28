@@ -27,7 +27,6 @@ void initialiser(File& f) {
  * @param[out] f : la file
  */
 void detruire(File& f) {
-	// Codez la fonction ......................................................
 	detruire(f.ch);
 }
 
@@ -51,7 +50,6 @@ bool estVide(const File& f) {
  * @pre la file n’est pas vide
  */
 Item tete(const File& f) {
-	// Codez la fonction ......................................................
 	Maillon* m = f.ch.tete;
 	return m->elem;
 }
@@ -61,8 +59,7 @@ Item tete(const File& f) {
  * @param[in,out] f : la file
  * @param[in] it : l'item à entrer
  */
-void entrer(File& f, const Item& it) { //note : toujours cibler la file à la fin.
-	// Codez la fonction ......................................................
+void entrer(File& f, Item& it) { //note : toujours cibler la file à la fin.
 	fin(f.ch);
 	inserer(f.ch, it);
 }
@@ -72,9 +69,13 @@ void entrer(File& f, const Item& it) { //note : toujours cibler la file à la fin
  * @param[in,out] f : la file
  * @pre f n’est pas vide
  */
-void sortir(File& f) { //note : toujours cibler la file au début.
+Case sortir(File& f) { //note : toujours cibler la file au début.
 	assert(!estVide(f));
-	// Codez la fonction ......................................................
+	Case c;
 	debut(f.ch);
+	c = tete(f);
 	supprimer(f.ch);
+	return c;
 }
+
+

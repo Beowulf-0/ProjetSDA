@@ -2,12 +2,10 @@
 #include <random>
 #include <iostream>
 
-/*
-*	@brief crée un problème
+/**
+*	@brief Génère des mines à des coordonnées aléatoires valides
 *	@param[in,out] pb, le problème
-*	@param[in] lines, le nombre de lignes
-*	@param[in] column, le nombre de colonnes
-*	@param[in] mines, le nombre de mines
+*	@param[in,out] mineList, le tableau de mines
 */
 void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines) {
 	pb->lineNumber = lines;
@@ -16,8 +14,8 @@ void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines)
 	pb->mineLoc = new Mine[pb->mineNumber];
 }
 
-/*
-*	@brief mélange un tableau de positions de mines en fonction de sa taille
+/**
+*	@brief mélange un tableau de mines
 *	@param[in,out] p, le problème
 *	@param[in,out] tab, le tableau de mines
 */
@@ -32,11 +30,6 @@ void shuffleArray(Problem *p, unsigned int *tab) {
 	}
 }
 
-/*
-*	@brief génère des mines sur des positions aléatoires
-*	@param[in,out] pb, le problème
-*	@param[in,out] mineList, le tableau de mines
-*/
 void generateMine(Problem *pb, Mine *mineList) {
 	//TODO: Security about Problem
 	unsigned int maxValue = pb->columnNumber * pb->lineNumber;
@@ -54,12 +47,9 @@ void generateMine(Problem *pb, Mine *mineList) {
 	delete[] tab;
 }
 
-/*
-*	@brief crée un problème
-*	@param[in,out] pb, le problème
-*	@param[in] lines, le nombre de lignes
-*	@param[in] column, le nombre de colonnes
-*	@param[in] mines, le nombre de mines
+/**
+*	@brief affecte les valeurs des variables au problème
+*	(et alloue dynamiquement le tableau de mines)
 */
 void createProblem() {
 	unsigned line, column, mines;
@@ -68,10 +58,7 @@ void createProblem() {
 	std::cin >> line >> column >> mines;
 
 	//Generate mines
-	problem.lineNumber = line;
-	problem.columnNumber = column;
-	problem.mineNumber = mines;
-	problem.mineLoc = new Mine[problem.mineNumber];
+	defineProblem(&problem, line, column, mines);
 	generateMine(&problem, problem.mineLoc);
 
 	std::cout << problem.lineNumber << " " << problem.columnNumber

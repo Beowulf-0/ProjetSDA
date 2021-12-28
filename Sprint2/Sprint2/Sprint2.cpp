@@ -7,16 +7,10 @@
  */
 
 #include <iostream>
-#include <random>
 #include <string>
 #include <ctime>
 
-enum LIMITS {
-	COLUMNS = 32,
-	LINES = 32
-};
-
-
+#include "Grille.h"
 
 int main() {
 
@@ -26,8 +20,9 @@ int main() {
 	bool loop = true;
 
 	while (loop) {
+		//WARNING: If cmd get a string, loop can be infinite ;(
 		std::cin >> cmd;
-		switch (cmd) {
+		switch ((int)cmd) {
 		case 1:
 			createProblem();
 			break;
@@ -49,8 +44,8 @@ int main() {
 			loop = false;
 
 		default:
-			std::cin.ignore(17, '\n');
-			std::cout << "Commande inconnue" << std::endl;
+			std::cout << "Commande inconnue";
+			break;
 
 		}
 	}

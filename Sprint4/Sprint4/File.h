@@ -62,6 +62,6 @@ void entrer(File& f, const Item& it);
  * @param[in,out] f : la file
  * @pre f n’est pas vide
  */
-void sortir(File& f);
+Case sortir(File& f);
 
 #endif
