@@ -2,11 +2,10 @@
 #define _STATE_
 
 /**
- * @file Item.h
- * @author l'équipe pédagogique
- * @version 1 23/12/05
- * @brief Projet sem04-tp-Cpp3 - Spécialisation du type Item
- * Structures de données et algorithmes - DUT1 Paris 5
+ * @file State.h
+ * @author ALI Mehdi
+ * @version 1 28/12/2021
+ * @brief Etat des cases
  */
 
 enum STATE {

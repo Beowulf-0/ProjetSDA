@@ -2,18 +2,26 @@
 #define _CASE_
 
 #include "State.h"
+#include "Content.h"
 
 /**
- * @file Item.h
- * @author l'équipe pédagogique
- * @version 1 23/12/05
- * @brief Projet sem04-tp-Cpp3 - Spécialisation du type Item
- * Structures de données et algorithmes - DUT1 Paris 5
+ * @file Case.h
+ * @author WAHADA Mehdi & ALI Mehdi
+ * @version 1 28/12/2021
+ * @brief Case de la grille
  */
 
+ // Représente une case de la grille
 struct Case {
-	unsigned content; //Can be CONTENT type
-	STATE state;
+	unsigned content; // content, le contenu de la case
+	STATE state; // state, l'état de la case
 };
 
-#endif
+/**
+*	@brief montre le contenu de l'élément de la case en fonction de son état
+*	@param[in] elementType, le contenu de l'élément
+*	@return le contenu de l'élément en fonction de son état
+*/
+char showElement(Case elementType);
+
+#endif // !_CASE_
