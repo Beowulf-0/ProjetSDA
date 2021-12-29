@@ -226,25 +226,27 @@ void generateGrid(Grille *gr) {
 	}
 }
 
-/**
-*	@brief vérifie si la partie est perdue
-*	@param[in] gr, la grille
-*	@return vrai si une case vide est démasqué ou si une case minée est marquée, sinon false.
-*/
-bool isLost(const Grille *gr) {
-	unsigned lines = gr->pb.lineNumber,
-		columns = gr->pb.columnNumber;
+bool isWon(Grille *gr) {
+	unsigned lines = gr->pb.lineNumber, columns = gr->pb.columnNumber, 
+		mineCount = gr->pb.mineNumber, grid = lines * columns, 
+		voidCases = grid - mineCount, nbCasesVide = 0;
+	
+
 	for (unsigned int i = 0; i < lines; i++) {
-		for (unsigned int j = 0; i < columns; j++) {
-			if ((gr->tab[i][j].content == CONTENT::MINE
-				&& gr->tab[i][j].state == STATE::SHOWED) 
-				|| (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::MARKED)) return true;
+		for (unsigned int j = 0; j < columns; j++) {
+			if (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::SHOWED) {
+				nbCasesVide++;
+			}
 		}
+	}
+
+	if (nbCasesVide == voidCases) {
+		return true;
 	}
 	return false;
 }
 
-void gameLost() {
+void gameWon() {
 	unsigned line, column, nbrMine, nbrStroke;
 	Grille gr{};
 
@@ -260,8 +262,8 @@ void gameLost() {
 	defineHisto(&gr.histo);
 	setStroke(&gr);
 	executeStroke(&gr);
-	
-	std::cout << (isLost(&gr) ? "Game Lost" : "Game Not Lost") << std::endl;
+
+	std::cout << (isWon(&gr) ? "game won" : "game not won") << std::endl;
 
 	//delete memory
 	for (unsigned i = 0; i < line; i++) {
