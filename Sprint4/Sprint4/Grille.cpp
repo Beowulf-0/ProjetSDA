@@ -271,3 +271,18 @@ void gameLost() {
 	delete[] gr.histo.strokes;
 	delete[] gr.pb.mineLoc;
 }
+
+void sortArray(Grille *gr) {
+	unsigned int ech, min;
+	for (unsigned int i = 0; i < gr->pb.mineNumber; i++) {
+		min = i;
+		for (unsigned int j = i + 1; j < gr->pb.mineNumber; j++) {
+			if (gr->pb.mineLoc[min] > gr->pb.mineLoc[j]) {
+				min = j;
+			}
+		}
+		ech = gr->pb.mineLoc[i];
+		gr->pb.mineLoc[i] = gr->pb.mineLoc[min];
+		gr->pb.mineLoc[min] = ech;
+	}
+}

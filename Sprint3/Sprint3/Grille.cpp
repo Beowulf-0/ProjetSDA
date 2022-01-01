@@ -227,23 +227,19 @@ void generateGrid(Grille *gr) {
 }
 
 bool isWon(Grille *gr) {
-	unsigned lines = gr->pb.lineNumber, columns = gr->pb.columnNumber, 
-		mineCount = gr->pb.mineNumber, grid = lines * columns, 
-		voidCases = grid - mineCount, nbCasesVide = 0;
-	
+	unsigned int lines = gr->pb.lineNumber, columns = gr->pb.columnNumber;
 
 	for (unsigned int i = 0; i < lines; i++) {
 		for (unsigned int j = 0; j < columns; j++) {
-			if (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::SHOWED) {
-				nbCasesVide++;
+			if (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::HIDED) {
+				return false;
+			}
+			else if (gr->tab[i][j].content == CONTENT::MINE && gr->tab[i][j].state == STATE::SHOWED) {
+				return false;
 			}
 		}
 	}
-
-	if (nbCasesVide == voidCases) {
-		return true;
-	}
-	return false;
+	return true;
 }
 
 void gameWon() {
@@ -262,6 +258,7 @@ void gameWon() {
 	defineHisto(&gr.histo);
 	setStroke(&gr);
 	executeStroke(&gr);
+	sortArray(&gr);
 
 	std::cout << (isWon(&gr) ? "game won" : "game not won") << std::endl;
 
@@ -272,4 +269,19 @@ void gameWon() {
 	delete[] gr.tab;
 	delete[] gr.histo.strokes;
 	delete[] gr.pb.mineLoc;
+}
+
+void sortArray(Grille *gr) {
+	unsigned int ech, min;
+	for (unsigned int i = 0; i < gr->pb.mineNumber; i++) {
+		min = i;
+		for (unsigned int j = i + 1; j < gr->pb.mineNumber; j++) {
+			if (gr->pb.mineLoc[min] > gr->pb.mineLoc[j]) {
+				min = j;
+			}
+		}
+		ech = gr->pb.mineLoc[i];
+		gr->pb.mineLoc[i] = gr->pb.mineLoc[min];
+		gr->pb.mineLoc[min] = ech;
+	}
 }

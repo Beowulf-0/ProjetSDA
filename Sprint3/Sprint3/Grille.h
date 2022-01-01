@@ -108,4 +108,10 @@ void gameWon();
 */
 bool isWon(const Grille *gr);
 
+/**
+*	@brief trie un tableau de mines
+*	@param[in,out] gr, la grille
+*/
+void sortArray(Grille *gr);
+
 #endif // !_GRILLE_
