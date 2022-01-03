@@ -20,6 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Problem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mine.h" />
+    <ClInclude Include="Problem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

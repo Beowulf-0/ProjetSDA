@@ -142,10 +142,21 @@ void executeStroke(Grille *gr) {
 			break;
 		case 'D':
 			if (validCase(gr, line, column)) demask(gr, line, column);
+			if (gr->tab[line][column].content == CONTENT::MINE && gr->tab[line][column].state == STATE::HIDED) demaskAllMines(gr);
 			break;
 		default:
 			//Throw Error ?
 			break;
+		}
+	}
+}
+
+void demaskAllMines(Grille *gr) {
+	unsigned int line = gr->pb.lineNumber, column = gr->pb.columnNumber;
+	for (unsigned int i = 0; i < line; i++) {
+		for (unsigned int j = 0; j < column; j++) {
+			if (gr->tab[i][j].content == CONTENT::MINE 
+				&& gr->tab[i][j].state == STATE::HIDED) demask(gr, i, j);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 #include "Grille.h"
 #include <iostream>
 
+
+//si une mine à été démasquée, démasquer toutes les autres mines.
 void createGrille() {
 	unsigned line, column, nbrMine, nbrStroke;
 	Grille gr{};
@@ -261,7 +263,7 @@ void gameLost() {
 	setStroke(&gr);
 	executeStroke(&gr);
 	
-	std::cout << (isLost(&gr) ? "Game Lost" : "Game Not Lost") << std::endl;
+	std::cout << (isLost(&gr) ? "game lost" : "game not lost") << std::endl;
 
 	//delete memory
 	for (unsigned i = 0; i < line; i++) {

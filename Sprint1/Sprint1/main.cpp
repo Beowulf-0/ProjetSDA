@@ -1,118 +1,53 @@
+/**
+ * @name MineSweeper
+ * @brief Démineur simple sans interface graphique.
+ *
+ * @authors BadiiiX & Beowulf
+ * @version 0.0.1
+ */
+
 #include <iostream>
-#include <time.h>
-#include <cassert>
+#include <string>
+#include <ctime>
 
-
-
-/**
-*	@brief représente un problème dans une partie de démineur
-*	nbLignes, le nombre de lignes de la future grille
-*	nbColonnes, le nombre de colonnes de la future grille
-*	nbMines, le nombre de mines de la future grille
-*/
-struct Probleme {
-	unsigned int nbLignes;
-	unsigned int nbColonnes;
-	unsigned int nbMines;
-	unsigned int* tabMines;
-};
-
-struct Historique {
-	unsigned int nbCoups;
-	char coups[2];
-};
-
-struct Mine{
-	bool estMarquée;
-	char symbole = 'x';
-};
-
-struct Grille {
-	Probleme probleme;
-	unsigned int tabGrille;
-	Historique coups;
-};
-
-/**
-*	@brief Crée un problème
-*	@param[in-out] p, le problème
-*/
-void createProblem(Probleme& p);
-
-/**
-*	@brief Affiche le problème
-*	@param[in] p, le problème
-*/
-void printProblem(const Probleme& p);
-
-/**
-*
-*
-*/
-void printGrid(const Grille& g);
+#include "Problem.h"
 
 int main() {
-	srand((unsigned int)time(NULL));
 
-	Probleme p;
-	Grille g;
+	srand((unsigned)time(NULL));
 
-	int commande;
+	int cmd;
+	bool loop = true;
 
-	std::cin >> commande;
-	while (true) {
-		switch (commande) {
+	while (loop) {
+		//WARNING: If cmd get a string, loop can be infinite ;(
+		std::cin >> cmd;
+		switch ((int)cmd) {
 		case 1:
-			createProblem(p);
-			printProblem(p);
+			createProblem();
 			break;
+
 		case 2:
-			printGrid(g);
+			
+			break;
+
+		case 3:
+			
+			break;
+
+		case 4:
 			break;
 
 		case 5:
-			//
 			break;
+
 		case 6:
-			return 0;
+			loop = false;
+
+		default:
+			std::cout << "Commande inconnue";
 			break;
+
 		}
 	}
-	
-}
-
-void createProblem(Probleme& p) {
-	//unsigned int lignes;
-	//unsigned int colonnes;
-	
-	std::cin >> p.nbLignes >> p.nbColonnes >> p.nbMines;
-	//p.tabMines = new unsigned int[p.nbMines];
-	//assert((p.nbLignes > 0 || p.nbColonnes > 0 || p.nbMines > 0) && (p.nbLignes < 16 || p.nbColonnes < 16 || p.nbMines < 32));
-
-}
-
-void printProblem(const Probleme& p) {
-	
-	std::cout << p.nbLignes << " " << p.nbColonnes << " " << p.nbMines;
-	for (unsigned int i = 0; i < p.nbMines; i++) {
-		//std::cout << " " << p.tabMines[i];
-	}
-	std::cout << std::endl;
-}
-
-void createGrid(Grille& g) {
-	unsigned int lignes, colonnes, nbreMines;
-	Grille gr;
-	gr.probleme.tabMines[g.probleme.nbMines];
-	std::cin >> lignes >> colonnes >> nbreMines;
-	
-}
-
-//
-void printGrid(const Grille& g) {
-	
-}
-
-void tests() {
-
 }

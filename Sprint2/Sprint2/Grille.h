@@ -75,6 +75,12 @@ void demask(Grille *gr, unsigned int x, unsigned int y);
 void createGrille();
 
 /**
+*	@brief démasque toutes les mines de la grille
+*	@param[in,out] gr, la grille
+*/
+void demaskAllMines(Grille *gr);
+
+/**
 *	@brief Entre les coordonnées des mines sur la grille
 *	@param[in,out] gr, la grille
 */
