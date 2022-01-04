@@ -234,9 +234,6 @@ bool isWon(Grille *gr) {
 			if (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::HIDED) {
 				return false;
 			}
-			else if (gr->tab[i][j].content == CONTENT::MINE && gr->tab[i][j].state == STATE::SHOWED) {
-				return false;
-			}
 		}
 	}
 	return true;
@@ -258,7 +255,6 @@ void gameWon() {
 	defineHisto(&gr.histo);
 	setStroke(&gr);
 	executeStroke(&gr);
-	sortArray(&gr);
 
 	std::cout << (isWon(&gr) ? "game won" : "game not won") << std::endl;
 
@@ -271,17 +267,11 @@ void gameWon() {
 	delete[] gr.pb.mineLoc;
 }
 
-void sortArray(Grille *gr) {
-	unsigned int ech, min;
-	for (unsigned int i = 0; i < gr->pb.mineNumber; i++) {
-		min = i;
-		for (unsigned int j = i + 1; j < gr->pb.mineNumber; j++) {
-			if (gr->pb.mineLoc[min] > gr->pb.mineLoc[j]) {
-				min = j;
-			}
+void demaskAllMines(Grille *gr) {
+	unsigned int line = gr->pb.lineNumber, column = gr->pb.columnNumber;
+	for (unsigned int i = 0; i < line; i++) {
+		for (unsigned int j = 0; j < column; j++) {
+			if (gr->tab[i][j].content == CONTENT::MINE && gr->tab[i][j].state == STATE::HIDED) demask(gr, i, j);
 		}
-		ech = gr->pb.mineLoc[i];
-		gr->pb.mineLoc[i] = gr->pb.mineLoc[min];
-		gr->pb.mineLoc[min] = ech;
 	}
 }

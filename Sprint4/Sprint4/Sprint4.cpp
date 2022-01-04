@@ -32,6 +32,7 @@ int main() {
 			break;
 
 		case 3:
+			gameWon();
 			break;
 
 		case 4:

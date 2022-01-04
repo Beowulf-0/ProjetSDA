@@ -109,9 +109,8 @@ void gameLost();
 bool isLost(const Grille *gr);
 
 /**
-*	@brief trie un tableau de mines
-*	@param[in,out] gr, la grille
+*	@brief détermine si la partie est perdue
 */
-void sortArray(Grille *gr);
+void gameWon();
 
 #endif // !_GRILLE_

@@ -274,17 +274,43 @@ void gameLost() {
 	delete[] gr.pb.mineLoc;
 }
 
-void sortArray(Grille *gr) {
-	unsigned int ech, min;
-	for (unsigned int i = 0; i < gr->pb.mineNumber; i++) {
-		min = i;
-		for (unsigned int j = i + 1; j < gr->pb.mineNumber; j++) {
-			if (gr->pb.mineLoc[min] > gr->pb.mineLoc[j]) {
-				min = j;
+bool isWon(Grille *gr) {
+	unsigned int lines = gr->pb.lineNumber, columns = gr->pb.columnNumber;
+
+	for (unsigned int i = 0; i < lines; i++) {
+		for (unsigned int j = 0; j < columns; j++) {
+			if (gr->tab[i][j].content == CONTENT::VOID && gr->tab[i][j].state == STATE::HIDED) {
+				return false;
 			}
 		}
-		ech = gr->pb.mineLoc[i];
-		gr->pb.mineLoc[i] = gr->pb.mineLoc[min];
-		gr->pb.mineLoc[min] = ech;
 	}
+	return true;
+}
+
+void gameWon() {
+	unsigned line, column, nbrMine, nbrStroke;
+	Grille gr{};
+
+	std::cin >> line >> column >> nbrMine;
+
+	defineProblem(&gr.pb, line, column, nbrMine);
+	generateGrid(&gr);
+	setMines(&gr);
+
+	fillGrid(&gr);
+
+	//Stroke System
+	defineHisto(&gr.histo);
+	setStroke(&gr);
+	executeStroke(&gr);
+
+	std::cout << (isWon(&gr) ? "game won" : "game not won") << std::endl;
+
+	//delete memory
+	for (unsigned i = 0; i < line; i++) {
+		delete[] gr.tab[i];
+	}
+	delete[] gr.tab;
+	delete[] gr.histo.strokes;
+	delete[] gr.pb.mineLoc;
 }

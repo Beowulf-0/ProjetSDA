@@ -109,9 +109,9 @@ void gameWon();
 bool isWon(const Grille *gr);
 
 /**
-*	@brief trie un tableau de mines
+*	@brief dévoile toutes les mines de la grille
 *	@param[in,out] gr, la grille
 */
-void sortArray(Grille *gr);
+void demaskAllMines(Grille *gr);
 
 #endif // !_GRILLE_
