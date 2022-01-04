@@ -142,7 +142,7 @@ void executeStroke(Grille *gr) {
 			break;
 		case 'D':
 			if (validCase(gr, line, column)) demask(gr, line, column);
-			if (gr->tab[line][column].content == CONTENT::MINE && gr->tab[line][column].state == STATE::HIDED) demaskAllMines(gr);
+			if (gr->tab[line][column].content == CONTENT::MINE && gr->tab[line][column].state == STATE::SHOWED) demaskAllMines(gr);
 			break;
 		default:
 			//Throw Error ?
