@@ -26,14 +26,14 @@ struct Problem {
 *	@param[in] column, le nombre de colonnes
 *	@param[in] mines, le nombre de mines
 */
-void defineProblem(Problem *pb, unsigned lines, unsigned column, unsigned mines);
+void defineProblem(Problem &pb, unsigned lines, unsigned column, unsigned mines);
 
 /**
 *	@brief melange un tableau de mines
 *	@param[in,out] p, le probleme
 *	@param[in,out] tab, le tableau de mines
 */
-void shuffleArray(Problem *p, unsigned int *tab);
+void shuffleArray(Problem &p, unsigned int *tab);
 
 /**
 *	@brief Genere des mines e des coordonnees aleatoires valides

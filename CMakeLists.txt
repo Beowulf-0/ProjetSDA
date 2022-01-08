@@ -3,7 +3,7 @@ project(ProjectSDA)               # Create project "simple_example"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
 
 # Add main.cpp file of project root directory as source file
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp Case.cpp Grille.cpp Historique.cpp Problem.cpp Case.h Content.h Grille.h Historique.h Mine.h Problem.h State.h Stroke.h)
 
 # Add executable target with source files listed in SOURCE_FILES variable
 add_executable(ProjectSDA ${SOURCE_FILES})

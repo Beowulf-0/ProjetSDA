@@ -77,8 +77,9 @@ void demask(Grille &gr, unsigned int x, unsigned int y);
 
 /**
 *	@brief Cree la grille de demineur
+ *	@param[in] command Permet d'effectuer une action par rapport à la commande (lose, win, showGrid)
 */
-void createGrille();
+void createGrille(unsigned command);
 
 /**
 *	@brief Entre les coordonnees des mines sur la grille
