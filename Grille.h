@@ -9,11 +9,11 @@
  * @file Grille.h
  * @author WAHADA Mehdi & ALI Mehdi
  * @version 1 28/12/2021
- * @brief La grille du d�mineur
+ * @brief La grille du demineur
  */
 
 struct Grille {
-	Problem pb;	// pb, le probl�me de la grille
+	Problem pb;	// pb, le probleme de la grille
 	Case **tab;	// tab, le tableau 2D de cases
 	Historique histo;	// histo, l'historique de coups
 };
@@ -25,7 +25,7 @@ struct Grille {
 void generateGrid(Grille &gr);
 
 /**
-*	@brief Affiche la grille de d�mineur
+*	@brief Affiche la grille de demineur
 *	@param[in] g, la grille
 */
 void printGrid(const Grille &g);
@@ -37,7 +37,7 @@ void printGrid(const Grille &g);
 void fillGrid(Grille &gr);
 
 /**
-*	@brief Analyse chaque coup de l'historique. Si la lettre du coup est un D, d�masque la case cibl�e et si c'est un M, la marque.
+*	@brief Analyse chaque coup de l'historique. Si la lettre du coup est un D, demasque la case ciblee et si c'est un M, la marque.
 *	@param[in,out] gr, la grille
 */
 void executeStroke(Grille &gr);
@@ -49,69 +49,76 @@ void executeStroke(Grille &gr);
 void setStroke(Grille &gr);
 
 /**
-*	@brief v�rifie si une case est valide
+*	@brief verifie si une case est valide
 *	@param[in] gr, la grille
 *	@param[in] x, l'abscisse
-*	@param[in] y, l'ordonn�e
-*	@return true si x/y sont inf�rieurs au nombre de lignes / colonnes
-*	et sup�rieurs ou �gales � 0, sinon false
+*	@param[in] y, l'ordonnee
+*	@return true si x/y sont inferieurs au nombre de lignes / colonnes
+*	et superieurs ou egales e 0, sinon false
 */
 bool validCase(Grille &gr, unsigned int x, unsigned int y);
 
 /**
-*	@brief v�rifie si une case contient une mine
+*	@brief verifie si une case contient une mine
 *	@param[in] gr, la grille
 *	@param[in] x, l'abscisse
-*	@param[in] y, l'ordonn�e
+*	@param[in] y, l'ordonnee
 *	@return true si le contenu de la case est une mine, sinon false
 */
 bool detectedMines(Grille &gr, unsigned int x, unsigned int y);
 
 /**
-*	@brief d�masque la case cibl�e et les cases aux alentours si la case d�masqu�e est vide
+*	@brief demasque la case ciblee et les cases aux alentours si la case demasquee est vide
 *	@param[in,out] gr, la grille
 *	@param[in] x, l'abscisse
-*	@param[in] y, l'ordonn�e
+*	@param[in] y, l'ordonnee
 */
 void demask(Grille &gr, unsigned int x, unsigned int y);
 
 /**
-*	@brief Cr�e la grille de d�mineur
+*	@brief Cree la grille de demineur
 */
 void createGrille();
 
 /**
-*	@brief Entre les coordonn�es des mines sur la grille
+*	@brief Entre les coordonnees des mines sur la grille
 *	@param[in,out] gr, la grille
 */
 void setMines(Grille &gr);
 
 /**
-*	@brief Incr�mente les cases � proximit�s de mines
+*	@brief Incremente les cases e proximites de mines
 *	@param[in,out] gr, la grille
 *	@param[in] x, l'abscisse x de la grille
-*	@param[in] y, l'ordonn�e y de la grille
-*	@return mineCount, le nombre de mines adjacentes � la case
-*	sinon 0 dans le case ou la case incr�ment�e contient une mine
+*	@param[in] y, l'ordonnee y de la grille
+*	@return mineCount, le nombre de mines adjacentes e la case
+*	sinon 0 dans le case ou la case incrementee contient une mine
 */
 unsigned minesNearby(Grille &gr, unsigned int x, unsigned int y);
 
 /**
-*	@brief d�termine si la partie est perdue
-*/
-void gameLost();
-
-/**
-*	@brief v�rifie si la partie est perdue
+*	@brief verifie si la partie est perdue
 *	@param[in] gr, la grille
-*	@return vrai si une case vide est d�masqu� ou si une case min�e est marqu�e, sinon false.
+*	@return vrai si une case vide est demasque ou si une case minee est marquee, sinon false.
 */
 bool isLost(const Grille &gr);
 
 /**
-*	@brief d�termine si la partie est perdue
+*	@brief verifie si la partie est gagnée
+*	@param[in] gr, la grille
+*	@return vrai si la partie est gagnée, faux si perdue
 */
-void gameWon();
+bool isWon(const Grille &gr);
 
-#include "../components/Grille.cpp"
+/**
+ * @brief supprime l'allocation dynamique attribué à la grille
+ * @param[in] gr, la grille
+ */
+void deleteGrille(Grille &gr);
+
+/**
+ * @brief lis une grille et cherche une case démasquable
+ */
+void readGrille();
+
 #endif // !_GRILLE_

@@ -1,8 +1,8 @@
-#include "../headers/Historique.h"
+#include "Historique.h"
 #include <iostream>
 
 /**
-*	@brief d�finit l'historique de coups et l'alloue dynamiquement
+*	@brief definit l'historique de coups et l'alloue dynamiquement
 *	@param[in,out] hist, l'historique de coups
 */
 void defineHisto(Historique &hist) {
@@ -10,4 +10,8 @@ void defineHisto(Historique &hist) {
 	std::cin >> nbrStroke;
 	hist.nbrStrokes = nbrStroke;
 	hist.strokes = new Stroke[hist.nbrStrokes];
+}
+
+void deleteHisto(Historique &hist) {
+	delete hist.strokes;
 }

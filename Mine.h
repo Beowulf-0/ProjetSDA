@@ -5,10 +5,10 @@
  * @file Historique.h
  * @author WAHADA Mehdi & ALI Mehdi
  * @version 1 28/12/2021
- * @brief Une mine du jeu Démineur
+ * @brief Une mine du jeu Demineur
  */
 
- //type énuméré pour les lettres
+ //type enumere pour les lettres
 typedef unsigned Mine;
 
 #endif // !_MINE_

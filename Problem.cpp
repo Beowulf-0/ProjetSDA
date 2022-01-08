@@ -1,4 +1,4 @@
-#include "../headers/Problem.h"
+#include "Problem.h"
 #include <random>
 #include <iostream>
 
@@ -21,7 +21,6 @@ void shuffleArray(Problem &p, unsigned int *tab) {
 }
 
 void generateMine(Problem pb, Mine *mineList) {
-    //TODO: Security about Problem
     unsigned int maxValue = pb.columnNumber * pb.lineNumber;
     unsigned *tab;
     tab = new unsigned int[maxValue];

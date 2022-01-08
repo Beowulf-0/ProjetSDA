@@ -16,10 +16,16 @@ struct Historique {
 };
 
 /**
-*	@brief d�finit l'historique de coups et l'alloue dynamiquement
+*	@brief definit l'historique de coups et l'alloue dynamiquement
 *	@param[in,out] hist, l'historique de coups
 */
 void defineHisto(Historique &hist);
 
-#include "../components/Historique.cpp"
+
+/**
+ * @brief supprime l'historique de coups alloué dynamiquement.
+ * @param[in,out] hist, l'historique de coups
+ */
+void deleteHisto(Historique &hist);
+
 #endif // !_HISTORIQUE_

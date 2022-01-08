@@ -1,10 +1,5 @@
-#include "../headers/Case.h"
+#include "Case.h"
 
-/**
-*	@brief montre le contenu de l'�l�ment de la case en fonction de son �tat
-*	@param[in] elementType, le contenu de l'�l�ment
-*	@return le contenu de l'�l�ment en fonction de son �tat
-*/
 char showElement(Case elementType) {
 	switch (elementType.state) {
 	case STATE::SHOWED:
