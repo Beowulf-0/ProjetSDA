@@ -112,7 +112,12 @@ void executeStroke(Grille &gr) {
         switch (gr.histo.strokes[i].letter) {
             case 'M':
                 if (validCase(gr, line, column))
-                    gr.tab[line][column].state = MARKED;
+                    gr.tab[line][column].state = STATE::MARKED;
+                    if(gr.tab[line][column].content != CONTENT::MINE) {
+                        if(gr.pb.mineNumber >= 1) {
+                            demask(gr, gr.pb.mineLoc[0] / gr.pb.columnNumber, gr.pb.mineLoc[0] % gr.pb.columnNumber);
+                        }
+                    }
                 break;
             case 'D':
                 if (validCase(gr, line, column)) demask(gr, line, column);
