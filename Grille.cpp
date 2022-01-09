@@ -239,7 +239,7 @@ void readGrille() {
 
         std::cin.ignore(charForSeparator); //ignore seperator line
 
-        char line[charForLine];
+        char* line = new char[charForLine];
         std::cin.read(line, sizeof(line)); //read whole line, with spaces
 
         for (unsigned j = 2; j < charForLine; j += 4) {
@@ -249,6 +249,8 @@ void readGrille() {
                 return;
             }
         }
+
+        delete [] line;
 
         std::cout << "Aucun coup déterminé.";
     }
